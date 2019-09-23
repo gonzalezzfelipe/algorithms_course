@@ -10,7 +10,6 @@
 
 int main(int argc, char *argv[]){
   int *vector;
-  int *out;
   int n;
   unsigned long flips;
 
@@ -18,11 +17,10 @@ int main(int argc, char *argv[]){
   n = amount_of_lines(filename);
 
   vector = (int*)malloc(n * sizeof(int));
-  out = (int*)malloc(n * sizeof(int));
 
   readfile(filename, vector, n);
 
-  flips = custommergesort(vector, out, n);
+  flips = custommergesort(vector, n);
   printf("Amount of flips: %lu\n", flips);
   return 0;
 }
