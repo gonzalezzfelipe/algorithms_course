@@ -38,7 +38,7 @@ int main(int argc, char *argv[]){
 	for (int i = 1; i < n + 1; i++) counter[scc[i]]++;
 
 	// Print sizes
-	for (int i = 1; i < n + 1; i++) if (counter[i] >= 1000) printf("Size: %d\n", counter[i]);
+	for (int i = 1; i < n + 1; i++) if (counter[i] >= 100) printf("Size: %d\n", counter[i]);
 
   free(_graph);
   free(counter);
