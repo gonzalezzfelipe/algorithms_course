@@ -7,8 +7,18 @@ struct Edge {
   int to;
 };
 
+
+struct Node {
+  int amount_downstream;
+  int *downstream;
+  int amount_upstream;
+  int *upstream;
+};
+
+
 struct Graph {
   struct Edge *edges;
+  struct Node *nodes;
   int n;
   int m;
 };

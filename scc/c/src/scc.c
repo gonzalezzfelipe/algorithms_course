@@ -17,26 +17,43 @@ int dfs(
 		int backwards
 	) {
 	/* Compute DFS of Graph. */
-	int check, next;
-
+  int i;
 	*(seen + start) = 1;
 	*(scc + start) = *leader_aux;
 
-	for (int i = 0; i < graph.m; i++) {
-		if (backwards) {
-			check = graph.edges[i].to;
-			next = graph.edges[i].from;
-		} else {
-			check = graph.edges[i].from;
-			next = graph.edges[i].to;
+	if (backwards == 1) {
+		for (i = 0; i < graph.nodes[start].amount_upstream; i++) {
+			if (*(seen + graph.nodes[start].upstream[i]) == 0) {
+				dfs(
+					graph,
+					seen,
+					graph.nodes[start].upstream[i],
+					scc,
+					leader_aux,
+					finish_time,
+					finish_time_aux,
+					backwards
+				);
+			}
 		}
-		if (check == start) if (*(seen + next) == 0) {
-			dfs(graph, seen, next, scc, leader_aux, finish_time, finish_time_aux, backwards);
+    (*finish_time_aux)++;
+  	*(finish_time + *finish_time_aux) = start;
+	} else {
+		for (i = 0; i < graph.nodes[start].amount_downstream; i++) {
+      if (*(seen + graph.nodes[start].downstream[i]) == 0) {
+				dfs(
+					graph,
+					seen,
+					graph.nodes[start].downstream[i],
+					scc,
+					leader_aux,
+					finish_time,
+					finish_time_aux,
+					backwards
+				);
+      }
 		}
 	}
-
-	(*finish_time_aux)++;
-	*(finish_time + *finish_time_aux) = start;
 	return 0;
 }
 
@@ -58,16 +75,16 @@ int get_scc(struct Graph graph, int* scc) {
 	int i;
 	int node;
 
-	leader_aux = (int*)malloc(sizeof(int));
-	finish_time_aux = (int*)malloc(sizeof(int));
-	finish_time = (int*)malloc(sizeof(int) * (graph.n + 1));
-	seen = (int*)malloc(sizeof(int) * (graph.n + 1));
+	leader_aux = malloc(sizeof(int));
+	finish_time_aux = malloc(sizeof(int));
+	finish_time = malloc(sizeof(int) * (graph.n + 1));
+	seen = malloc(sizeof(int) * (graph.n + 1));
+  for (i = 0; i < graph.n + 1; i++) *(finish_time + i) = i;
 
-	*finish_time_aux = 0;
-	for (i = 0; i < graph.n + 1; i++) *(finish_time + i) = i;
+	for (int run = 1; run >= 0; run--) {
+    *finish_time_aux = 0;
+  	for (i = 0; i < graph.n + 1; i++) *(seen + i) = 0;
 
-	for (int run = 0; run < 2; run++) {
-		for (i = 0; i < graph.n + 1; i++) *(seen + i) = 0;
 		for (i = graph.n; i > 0; i--) {
 			node = *(finish_time + i);
 			if (*(seen + node) == 0) {
@@ -76,5 +93,10 @@ int get_scc(struct Graph graph, int* scc) {
 			}
 		}
 	}
+
+  free(leader_aux);
+  free(finish_time);
+  free(finish_time_aux);
+  free(seen);
 	return 0;
 }
