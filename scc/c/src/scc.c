@@ -74,23 +74,33 @@ int get_scc(struct Graph graph, int* scc) {
 	int *seen;
 	int i;
 	int node;
+	int *_trash;
 
 	leader_aux = malloc(sizeof(int));
 	finish_time_aux = malloc(sizeof(int));
 	finish_time = malloc(sizeof(int) * (graph.n + 1));
+	_trash = malloc(sizeof(int) * (graph.n + 1));
 	seen = malloc(sizeof(int) * (graph.n + 1));
   for (i = 0; i < graph.n + 1; i++) *(finish_time + i) = i;
 
-	for (int run = 1; run >= 0; run--) {
-    *finish_time_aux = 0;
-  	for (i = 0; i < graph.n + 1; i++) *(seen + i) = 0;
+	*finish_time_aux = 0;
+	for (i = graph.n; i > 0; i--) *(seen + i) = 0;
 
-		for (i = graph.n; i > 0; i--) {
-			node = *(finish_time + i);
-			if (*(seen + node) == 0) {
-				*leader_aux = node;
-				dfs(graph, seen, node, scc, leader_aux, finish_time, finish_time_aux, run);
-			}
+	for (i = graph.n; i > 0; i--) {
+		if (*(seen + i) == 0) {
+			*leader_aux = i;
+			dfs(graph, seen, i, _trash, leader_aux, finish_time, finish_time_aux, 1);
+		}
+	}
+
+	for (i = graph.n; i > 0; i--) *(seen + i) = 0;
+	for (int i = 0; i < graph.n + 1; i++) scc[i] = 0;
+
+	for (i = graph.n; i > 0; i--) {
+		node = *(finish_time + i);
+		if (*(seen + node) == 0) {
+			*leader_aux = node;
+			dfs(graph, seen, node, scc, leader_aux, _trash, finish_time_aux, 0);
 		}
 	}
 

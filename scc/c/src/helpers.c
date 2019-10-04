@@ -76,3 +76,12 @@ int init_graph(char *filename, struct Graph *graph) {
 	fill_nodes(graph);
 	return 0;
 }
+
+
+int print_sideways(int* temp, int n) {
+  for (int m = 0; m < n; m++) {
+    printf("%d,", *(temp + m));
+  }
+  printf("\n");
+  return 0;
+}
