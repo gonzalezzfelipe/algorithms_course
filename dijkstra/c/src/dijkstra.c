@@ -79,6 +79,7 @@ int Graph__from_edges_in_file(struct Graph *graph, char *filename, int n) {
 
 
 int dijkstra(struct Graph graph, int start, int *distances) {
+  // TODO: Implement it with priority queue
   int meassured[graph.n + 1];
   int value;
   int min_value;
